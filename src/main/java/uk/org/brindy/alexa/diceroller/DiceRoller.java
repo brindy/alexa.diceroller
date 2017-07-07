@@ -1,0 +1,25 @@
+package uk.org.brindy.alexa.diceroller;
+
+import java.util.Random;
+
+public class DiceRoller {
+
+    private final Random random;
+
+    DiceRoller(long seed) {
+        random = new Random(seed);
+    }
+
+    public DiceRoller() {
+        this(System.currentTimeMillis());
+    }
+
+    public Result roll(int number, int size) {
+        Result result = new Result();
+        for (int i = 0; i < number; i++) {
+            result.add(random.nextInt(size) + 1);
+        }
+        return result;
+    }
+
+}
