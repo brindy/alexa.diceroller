@@ -12,6 +12,7 @@ import com.amazon.speech.speechlet.SpeechletException;
 import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.SimpleCard;
+import org.apache.commons.lang3.StringUtils;
 
 public class DiceRollerSpeechlet implements Speechlet {
 
@@ -33,15 +34,23 @@ public class DiceRollerSpeechlet implements Speechlet {
     }
 
     public SpeechletResponse onIntent(IntentRequest request, Session session) throws SpeechletException {
-        System.out.print("onIntent requestId: " + request.getRequestId() + ", sessionId: " + session.getSessionId());
-
         Intent intent = request.getIntent();
-        int size = Integer.parseInt(intent.getSlot("Size").getValue());
+        int size = getOptional(intent, "Size", -1);
+        if (-1 == size) {
+            return errorResponse();
+        }
+
         int number = getOptional(intent, "Number", 1);
 
         Result result = roller.roll(number, size);
 
         return createResponse(result, number, size);
+    }
+
+    private SpeechletResponse errorResponse() {
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText("I'm sorry.  I was not able to understand what you wanted me to roll.");
+        return SpeechletResponse.newTellResponse(speech);
     }
 
     private SpeechletResponse createResponse(Result result, int number, int size) {
@@ -59,38 +68,36 @@ public class DiceRollerSpeechlet implements Speechlet {
     }
 
     private String toText(Result result, int number, int size) {
-        String text = "I rolled " + number + "d " + size + (number > 1 ? "s" : "") + " and got a";
+        StringBuilder text = new StringBuilder("I rolled ");
+        text.append(number).append("d ").append(size).append((number > 1 ? "s" : "")).append(" and got a");
 
         int i = 0;
         for (; i < result.getRolls().size(); i++) {
             if (i > 0) {
                 if (i + 1 == result.getRolls().size()) {
-                    text += " and a";
+                    text.append(" and a");
                 } else {
-                    text += ",";
+                    text.append(",");
                 }
             }
 
-            text += " " + result.getRolls().get(i);
+            text.append(" ").append(result.getRolls().get(i));
         }
 
         if (i > 1) {
-            text += " for a total of " + result.getTotal();
+            text.append(" for a total of ").append(result.getTotal());
         }
 
-        text += ".";
-        return text;
+        text.append(".");
+        return text.toString();
     }
 
     private int getOptional(Intent intent, String slotName, int defaultValue) {
         Slot slot = intent.getSlot(slotName);
-        if (slot != null) {
-            try {
-                return Integer.parseInt(slot.getValue());
-            } catch(NumberFormatException ex) {
-            }
+        if (slot == null || !StringUtils.isNumeric(slot.getValue())) {
+            return defaultValue;
         }
-        return defaultValue;
+        return Integer.parseInt(slot.getValue());
     }
 
     public void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException {

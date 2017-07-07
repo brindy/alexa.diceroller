@@ -22,13 +22,12 @@ public class DiceRollerSpeechletTest {
     }
 
     @Test
-    public void onIntent_numberUnkonwn_size20() throws Exception {
-        DiceRoller roller = new DiceRoller(3);
+    public void onIntent_sizeUnknown() throws Exception {
+        DiceRoller roller = new DiceRoller(0);
         DiceRollerSpeechlet function = new DiceRollerSpeechlet(roller);
 
-        Slot numberSlot = Slot.builder().withName("Number").withValue("?").build();
-        Slot sizeSlot = Slot.builder().withName("Size").withValue("20").build();
-        Intent intent = Intent.builder().withName("Roll").withSlot(sizeSlot).withSlot(numberSlot).build();
+        Slot sizeSlot = Slot.builder().withName("Size").withValue("?").build();
+        Intent intent = Intent.builder().withName("Roll").withSlot(sizeSlot).build();
 
         IntentRequest request = mock(IntentRequest.class);
         when(request.getIntent()).thenReturn(intent);
@@ -37,9 +36,8 @@ public class DiceRollerSpeechletTest {
         SpeechletResponse response = function.onIntent(request, session);
 
         PlainTextOutputSpeech outputSpeech = (PlainTextOutputSpeech) response.getOutputSpeech();
-        assertThat(outputSpeech.getText(), equalTo("I rolled 1d 20 and got a 15."));
+        assertThat(outputSpeech.getText(), equalTo("I'm sorry.  I was not able to understand what you wanted me to roll."));
     }
-
 
     @Test
     public void onIntent_number3_size8() throws Exception {
@@ -58,6 +56,26 @@ public class DiceRollerSpeechletTest {
 
         PlainTextOutputSpeech outputSpeech = (PlainTextOutputSpeech) response.getOutputSpeech();
         assertThat(outputSpeech.getText(), equalTo("I rolled 3d 8s and got a 6, 7 and a 2 for a total of 15."));
+    }
+
+
+    @Test
+    public void onIntent_numberUnkonwn_size20() throws Exception {
+        DiceRoller roller = new DiceRoller(3);
+        DiceRollerSpeechlet function = new DiceRollerSpeechlet(roller);
+
+        Slot numberSlot = Slot.builder().withName("Number").withValue("?").build();
+        Slot sizeSlot = Slot.builder().withName("Size").withValue("20").build();
+        Intent intent = Intent.builder().withName("Roll").withSlot(sizeSlot).withSlot(numberSlot).build();
+
+        IntentRequest request = mock(IntentRequest.class);
+        when(request.getIntent()).thenReturn(intent);
+
+        Session session = mock(Session.class);
+        SpeechletResponse response = function.onIntent(request, session);
+
+        PlainTextOutputSpeech outputSpeech = (PlainTextOutputSpeech) response.getOutputSpeech();
+        assertThat(outputSpeech.getText(), equalTo("I rolled 1d 20 and got a 15."));
     }
 
     @Test

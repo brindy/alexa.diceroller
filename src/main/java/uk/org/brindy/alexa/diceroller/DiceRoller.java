@@ -2,7 +2,7 @@ package uk.org.brindy.alexa.diceroller;
 
 import java.util.Random;
 
-public class DiceRoller {
+class DiceRoller {
 
     private final Random random;
 
@@ -10,11 +10,11 @@ public class DiceRoller {
         random = new Random(seed);
     }
 
-    public DiceRoller() {
+    DiceRoller() {
         this(System.currentTimeMillis());
     }
 
-    public Result roll(int number, int size) {
+    Result roll(int number, int size) {
         Result result = new Result();
         for (int i = 0; i < number; i++) {
             result.add(random.nextInt(size) + 1);
