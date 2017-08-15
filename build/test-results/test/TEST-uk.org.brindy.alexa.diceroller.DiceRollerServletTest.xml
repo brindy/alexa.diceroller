@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="uk.org.brindy.alexa.diceroller.DiceRollerServletTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2017-07-07T01:33:53" hostname="WarBrindyMBP15.local" time="0.104">
-  <properties/>
-  <testcase name="onIntent_noNumber_size6" classname="uk.org.brindy.alexa.diceroller.DiceRollerServletTest" time="0.102"/>
-  <testcase name="onIntent_number2_size6" classname="uk.org.brindy.alexa.diceroller.DiceRollerServletTest" time="0.001"/>
-  <testcase name="onIntent_number3_size8" classname="uk.org.brindy.alexa.diceroller.DiceRollerServletTest" time="0.001"/>
-  <system-out><![CDATA[onIntent requestId: null, sessionId: nullonIntent requestId: null, sessionId: nullonIntent requestId: null, sessionId: null]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

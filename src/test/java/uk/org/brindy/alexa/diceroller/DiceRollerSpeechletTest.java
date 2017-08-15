@@ -36,7 +36,7 @@ public class DiceRollerSpeechletTest {
         SpeechletResponse response = function.onIntent(request, session);
 
         PlainTextOutputSpeech outputSpeech = (PlainTextOutputSpeech) response.getOutputSpeech();
-        assertThat(outputSpeech.getText(), equalTo("I'm sorry.  I was not able to understand what you wanted me to roll."));
+        assertThat(outputSpeech.getText(), equalTo("I'm sorry.  I was not able to understand what dice you wanted me to roll."));
     }
 
     @Test

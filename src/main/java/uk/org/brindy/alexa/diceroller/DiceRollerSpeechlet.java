@@ -33,8 +33,14 @@ public class DiceRollerSpeechlet implements Speechlet {
         return null;
     }
 
+    public void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException {
+    }
+
     public SpeechletResponse onIntent(IntentRequest request, Session session) throws SpeechletException {
         Intent intent = request.getIntent();
+
+        // TODO check the name of the intent (need to handle cancel, help, stop??)
+
         int size = getOptional(intent, "Size", -1);
         if (-1 == size) {
             return errorResponse();
@@ -48,9 +54,13 @@ public class DiceRollerSpeechlet implements Speechlet {
     }
 
     private SpeechletResponse errorResponse() {
+        SimpleCard card = new SimpleCard();
+        card.setTitle("Sorry");
+        card.setContent("I was not able to understand what dice you wanted me to roll.");
+
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("I'm sorry.  I was not able to understand what you wanted me to roll.");
-        return SpeechletResponse.newTellResponse(speech);
+        speech.setText("I'm sorry.  I was not able to understand what dice you wanted me to roll.");
+        return SpeechletResponse.newTellResponse(speech, card);
     }
 
     private SpeechletResponse createResponse(Result result, int number, int size) {
@@ -100,8 +110,6 @@ public class DiceRollerSpeechlet implements Speechlet {
         return Integer.parseInt(slot.getValue());
     }
 
-    public void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException {
 
-    }
 
 }
